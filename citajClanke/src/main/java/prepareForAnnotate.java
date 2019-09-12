@@ -28,8 +28,8 @@ public class prepareForAnnotate {
         for(int i = 0; i < sentences.length; i++)
             System.out.println(sentiment[i] + "\t" + sentences[i]);
 
-        FileWriter fw = new FileWriter("/Users/snc/Box/Škola/HR/clanke/" + filename);
-        System.out.println("\n\nPišem podatke na /Users/snc/Box/Škola/HR/clanke/" + filename);
+        FileWriter fw = new FileWriter("/Users/snc/Box/Škola/HR/Croatian-sentimentAnalysis/clanke/" + filename);
+        System.out.println("\n\nPišem podatke na /Users/snc/Box/Škola/HR/Croatian-sentimentAnalysis/clanke/" + filename);
         fw.write(url + '\n');
         for(int i = 0; i < sentences.length; i++) {
             if(sentiment[i] == -2)
@@ -37,5 +37,37 @@ public class prepareForAnnotate {
             fw.write(sentiment[i] + "\t;;;\t" + sentences[i] + "\n");
         }
         fw.close();
+        updateCounts(url);
+    }
+
+    public static void updateCounts(String url) throws Exception {
+        BufferedReader fr;
+        String[] fileText = new String[5]; //one line for each news source
+        try {
+            fr = new BufferedReader(new FileReader("/Users/snc/Box/Škola/HR/Croatian-sentimentAnalysis/counts.txt"));
+            int i = 0;
+            while(fr.ready())
+                fileText[i++] = fr.readLine();
+        } catch (Exception e) {
+            System.out.println("Nije bio moguće pročitati fajl brojeva članaka.");
+            return;
+        }
+
+        if(url.startsWith("https://dnevnik.hr"))
+            fileText[0] = "Dnevnik\t\t" + (Integer.parseInt(fileText[0].split("\t\t")[1]) + 1);
+        else if(url.startsWith("https://vijesti.hrt.hr"))
+            fileText[1] = "HRT\t\t" + (Integer.parseInt(fileText[1].split("\t\t")[1]) + 1);
+
+        BufferedWriter fw;
+        try {
+            fw = new BufferedWriter(new FileWriter("/Users/snc/Box/Škola/HR/Croatian-sentimentAnalysis/counts.txt"));
+            for(String s : fileText)
+                fw.write(s + "\n");
+            fw.close();
+        } catch (Exception e) {
+            System.out.println("Nije bio moguće napisati fajl brojeva članaka.");
+            return;
+        }
+        System.out.println("Osviježen je fajl brojeva članaka.");
     }
 }
