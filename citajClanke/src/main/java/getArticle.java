@@ -8,7 +8,9 @@ import java.util.List;
 
 public class getArticle {
     public static void main(String[] args) throws Exception {
-        getArticle("https://vijesti.hrt.hr/540416/kazneni-i-stegovni-postupak-protiv-vojnika-koji-je-ozlijedio-maloljetnika");
+        String[] art = getArticle("https://dnevnik.hr/vijesti/hrvatska/zrakoplove-hrvatskoj-nude-danska-i-norveska---574861.html");
+        for(String s : art)
+            System.out.println(s);
     }
 
     public static String[] getArticle(String url) throws Exception {
@@ -46,7 +48,7 @@ public class getArticle {
         article = article.replaceAll("LINEBREAK ", "");
         //List<String> sentences = new List<String>();
         //List<String> sentences = article.split("((?<=([.!?])[ \n])|\n)");
-        return article.split("((?<=([.!?])[ \n])|\n)");
+        return article.split("((?<=([.!?])[ \n](?=([^a-z])))|\n)");
     }
 
     public static String[] fetchHRT(Document html) {
