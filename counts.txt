@@ -1,0 +1,5 @@
+Dnevnik		2
+HRT		2
+24sata		0
+Jutarnji-list	0
+Novi-list	0
