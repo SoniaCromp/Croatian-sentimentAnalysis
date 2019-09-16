@@ -57,6 +57,8 @@ public class prepareForAnnotate {
             fileText[0] = "Dnevnik\t\t" + (Integer.parseInt(fileText[0].split("\t\t")[1]) + 1);
         else if(url.startsWith("https://vijesti.hrt.hr"))
             fileText[1] = "HRT\t\t" + (Integer.parseInt(fileText[1].split("\t\t")[1]) + 1);
+        else if(url.startsWith("https://www.24sata.hr/news"))
+            fileText[2] = "24sata\t\t" + (Integer.parseInt(fileText[2].split("\t\t")[1]) + 1);
 
         BufferedWriter fw;
         try {

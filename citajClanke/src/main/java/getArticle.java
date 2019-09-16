@@ -4,11 +4,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import javax.annotation.processing.SupportedSourceVersion;
+import java.util.Arrays;
 import java.util.List;
 
 public class getArticle {
     public static void main(String[] args) throws Exception {
-        String[] art = getArticle("https://dnevnik.hr/vijesti/hrvatska/zrakoplove-hrvatskoj-nude-danska-i-norveska---574861.html");
+        String[] art = getArticle("https://www.24sata.hr/news/ljubicic-on-je-iz-zagreba-ne-zna-da-more-tako-ne-izgleda-648751");
         for(String s : art)
             System.out.println(s);
     }
@@ -21,6 +22,8 @@ public class getArticle {
             return fetchDnevnik(html);
         else if(url.startsWith("https://vijesti.hrt.hr"))
             return fetchHRT(html);
+        else if(url.startsWith("https://www.24sata.hr/news"))
+            return fetch24sata(html);
         else {
             System.out.println("došlo je pogreške čitajući izvor vijesti...");
             return null;
@@ -56,5 +59,28 @@ public class getArticle {
         //article = article.replaceAll("(LINEBREAK )+", "\n ");
         //article = article.replaceAll("LINEBREAK", "");
         return article.split("((?<=([.!?])[ \n](?=([^a-z])))|\n)");
+    }
+
+    public static String[] fetch24sata(Document html) {
+        String article = "";
+        html.select("video").remove();
+        //Elements ps = html.getElementsByTag("p");
+        html.select("time").remove();
+        html.select("span").remove();
+        /*lements h1 = html.getElementsByTag("h1"); //the title
+        Elements h2 = html.getElementsByTag("h2"); //sub-title and section headers
+        article += h1.text() + " \n";
+        article += ps.text();*/
+
+        for(Element e: html.getAllElements()) {
+            //System.out.println(e.tag());
+            if(e.tag().toString().equals("h1") || e.tag().toString().equals("h2"))
+                article += e.text() + " \n";
+            else if(e.tag().toString().equals("p") && !e.text().contains("POGLEDAJTE VIDEO:")) {
+                article += e.text() + " ";
+            }
+        }
+        String[] sentences = article.split("((?<=([.!?])[ \n](?=([^a-z])))|\n)");
+        return Arrays.copyOf(sentences, sentences.length - 1);
     }
 }
