@@ -1,5 +1,5 @@
 Dnevnik		5
 HRT		5
 24sata		6
-Jutarnji-list	1
+Jutarnji-list	2
 Novi-list	0
