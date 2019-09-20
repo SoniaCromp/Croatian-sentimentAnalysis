@@ -9,7 +9,7 @@ import java.util.List;
 
 public class getArticle {
     public static void main(String[] args) throws Exception {
-        String[] art = getArticle("https://www.24sata.hr/news/ljubicic-on-je-iz-zagreba-ne-zna-da-more-tako-ne-izgleda-648751");
+        String[] art = getArticle("https://www.jutarnji.hr/vijesti/hrvatska/aladrovic-vecina-mirovinske-reforme-je-prihvacena-odredene-segmente-mijenjamo-prihvacajuci-prijedloge-sindikata-time-se-gubi-smisao-referenduma/9380423/");
         for(String s : art)
             System.out.println(s);
     }
@@ -24,6 +24,8 @@ public class getArticle {
             return fetchHRT(html);
         else if(url.startsWith("https://www.24sata.hr/news"))
             return fetch24sata(html);
+        else if(url.startsWith("https://www.jutarnji.hr/"))
+            return fetchJutarnji(html);
         else {
             System.out.println("došlo je pogreške čitajući izvor vijesti...");
             return null;
@@ -82,5 +84,14 @@ public class getArticle {
         }
         String[] sentences = article.split("((?<=([.!?])[ \n](?=([^a-z])))|\n)");
         return Arrays.copyOf(sentences, sentences.length - 1);
+    }
+
+    public static String[] fetchJutarnji(Document html) {
+        String article = "";
+        Elements title = html.getElementsByClass("title");
+        article += title.first().text() + " \n";
+        Elements ps = html.getElementById("CImaincontent").getElementsByTag("p");
+        article += ps.text();
+        return article.split("((?<=([.!?])[ \n](?=([^a-z])))|\n)");
     }
 }

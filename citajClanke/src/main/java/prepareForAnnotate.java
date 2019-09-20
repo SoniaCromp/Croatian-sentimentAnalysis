@@ -16,9 +16,9 @@ public class prepareForAnnotate {
         int[] sentiment = new int[sentences.length];
         for(int s = 0; s < sentences.length; s++) {
             for(int i = 0; i < s; i++)
-                System.out.println(sentiment[i] + "\t" + sentences[i]);
+                System.out.println(sentiment[i] + "\t" + sentences[i].replaceAll("\n", ""));
             for(int i = s; i < sentences.length; i++) {
-                System.out.println("_\t" + sentences[i]);
+                System.out.println("_\t" + sentences[i].replaceAll("\n", ""));
             }
             System.out.println("Sentiment sljedeće rečenice: ");
             sentiment[s] = in.nextInt();
@@ -34,7 +34,7 @@ public class prepareForAnnotate {
         for(int i = 0; i < sentences.length; i++) {
             if(sentiment[i] == -2)
                 continue;
-            fw.write(sentiment[i] + "\t;;;\t" + sentences[i] + "\n");
+            fw.write(sentiment[i] + "\t;;;\t" + sentences[i].replaceAll("\n", "") + "\n");
         }
         fw.close();
         updateCounts(url);
@@ -59,6 +59,8 @@ public class prepareForAnnotate {
             fileText[1] = "HRT\t\t" + (Integer.parseInt(fileText[1].split("\t\t")[1]) + 1);
         else if(url.startsWith("https://www.24sata.hr/news"))
             fileText[2] = "24sata\t\t" + (Integer.parseInt(fileText[2].split("\t\t")[1]) + 1);
+        else if(url.startsWith("https://www.jutarnji.hr/vijesti")) //this one only uses one tab
+            fileText[3] = "Jutarnji-list\t" + (Integer.parseInt(fileText[3].split("\t")[1]) + 1);
 
         BufferedWriter fw;
         try {
