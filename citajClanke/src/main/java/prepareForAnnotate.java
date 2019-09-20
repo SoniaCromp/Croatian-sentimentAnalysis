@@ -61,6 +61,8 @@ public class prepareForAnnotate {
             fileText[2] = "24sata\t\t" + (Integer.parseInt(fileText[2].split("\t\t")[1]) + 1);
         else if(url.startsWith("https://www.jutarnji.hr/vijesti")) //this one only uses one tab
             fileText[3] = "Jutarnji-list\t" + (Integer.parseInt(fileText[3].split("\t")[1]) + 1);
+        else if(url.startsWith("http://novilist.hr/Vijesti")) //also just one tab
+            fileText[4] = "Novi-list\t" + (Integer.parseInt(fileText[4].split("\t")[1]) + 1);
 
         BufferedWriter fw;
         try {

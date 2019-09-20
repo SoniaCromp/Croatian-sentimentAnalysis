@@ -9,7 +9,7 @@ import java.util.List;
 
 public class getArticle {
     public static void main(String[] args) throws Exception {
-        String[] art = getArticle("https://www.jutarnji.hr/vijesti/hrvatska/aladrovic-vecina-mirovinske-reforme-je-prihvacena-odredene-segmente-mijenjamo-prihvacajuci-prijedloge-sindikata-time-se-gubi-smisao-referenduma/9380423/");
+        String[] art = getArticle("http://www.novilist.hr/Vijesti/Svijet/RECESIJA-CE-STICI-IZ-NJEMACKE-Francuska-poziva-Njemacku-da-sto-prije-pokrene-svoje-gospodarstvo");
         for(String s : art)
             System.out.println(s);
     }
@@ -26,6 +26,8 @@ public class getArticle {
             return fetch24sata(html);
         else if(url.startsWith("https://www.jutarnji.hr/"))
             return fetchJutarnji(html);
+        else if(url.startsWith("http://www.novilist.hr/Vijesti"))
+            return fetchNoviList(html);
         else {
             System.out.println("došlo je pogreške čitajući izvor vijesti...");
             return null;
@@ -39,7 +41,7 @@ public class getArticle {
         for(Element p : ps) {
             if((p.className().equals("") || p.className().equals("lead intextAdIgnore")) && !p.html().contains("<span class=")) {
                 if(p.html().startsWith("Dnevnik Nove TV gledajte svakog dana od 19:15, a više o najvažnijim vijestima čitajte na portalu")) {
-                    return article.split("((?<=[.!?][ \n])|\n)"); //splits text on sentences;
+                    return article.split("((?<=[.!?]\"?[ \n])|\n)"); //splits text on sentences;
                 }
                 String str = p.text().replaceAll("''", "\"") + " ";
                 if(!str.matches("[ \t\n]*")) //get rid of those pesky plain whitespace lines
@@ -48,7 +50,7 @@ public class getArticle {
         }
         String timeControl = "(. [^a-z])";
         article = article.replaceAll("LINEBREAK ", "");
-        return article.split("((?<=([.!?])[ \n](?=([^a-z])))|\n)");
+        return article.split("((?<=([.!?]\"?)[ \n](?=([^a-z])))|\n)");
     }
 
     public static String[] fetchHRT(Document html) {
@@ -60,7 +62,7 @@ public class getArticle {
         article += ps.text();
         //article = article.replaceAll("(LINEBREAK )+", "\n ");
         //article = article.replaceAll("LINEBREAK", "");
-        return article.split("((?<=([.!?])[ \n](?=([^a-z])))|\n)");
+        return article.split("((?<=([.!?]\"?)[ \n](?=([^a-z])))|\n)");
     }
 
     public static String[] fetch24sata(Document html) {
@@ -82,7 +84,7 @@ public class getArticle {
                 article += e.text() + " ";
             }
         }
-        String[] sentences = article.split("((?<=([.!?])[ \n](?=([^a-z])))|\n)");
+        String[] sentences = article.split("((?<=([.!?]\"?)[ \n](?=([^a-z])))|\n)");
         return Arrays.copyOf(sentences, sentences.length - 1);
     }
 
@@ -92,6 +94,15 @@ public class getArticle {
         article += title.first().text() + " \n";
         Elements ps = html.getElementById("CImaincontent").getElementsByTag("p");
         article += ps.text();
-        return article.split("((?<=([.!?])[ \n](?=([^a-z])))|\n)");
+        return article.split("((?<=([.!?]\"?)[ \n](?=([^a-z])))|\n)");
+    }
+
+    public static String[] fetchNoviList(Document html) {
+        String article = "";
+        Element title = html.getElementById("title").getElementsByTag("h1").first();
+        article += title.text() + " \n";
+        Elements text = html.getElementById("column1").getElementsByTag("p");
+        article += text.text();
+        return article.split("((?<=([.!?]\"?)[ \n](?=([^a-z])))|\n)");
     }
 }
