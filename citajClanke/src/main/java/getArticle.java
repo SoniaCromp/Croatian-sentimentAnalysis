@@ -9,7 +9,7 @@ import java.util.List;
 
 public class getArticle {
     public static void main(String[] args) throws Exception {
-        String[] art = getArticle("http://www.novilist.hr/Vijesti/Svijet/RECESIJA-CE-STICI-IZ-NJEMACKE-Francuska-poziva-Njemacku-da-sto-prije-pokrene-svoje-gospodarstvo");
+        String[] art = getArticle("http://www.novilist.hr/Vijesti/Hrvatska/HVIDRA-ne-odustaje-od-Pupovca-Gdje-su-te-ustase-o-kojima-prica-A-u-stranci-ima-dokazane-cetnike?meta_refresh=true");
         for(String s : art)
             System.out.println(s);
     }
@@ -26,7 +26,7 @@ public class getArticle {
             return fetch24sata(html);
         else if(url.startsWith("https://www.jutarnji.hr/"))
             return fetchJutarnji(html);
-        else if(url.startsWith("http://www.novilist.hr/Vijesti"))
+        else if(url.startsWith("http://novilist.hr/Vijesti") || url.startsWith("http://www.novilist.hr/Vijesti"))
             return fetchNoviList(html);
         else {
             System.out.println("došlo je pogreške čitajući izvor vijesti...");
@@ -101,7 +101,14 @@ public class getArticle {
         String article = "";
         Element title = html.getElementById("title").getElementsByTag("h1").first();
         article += title.text() + " \n";
+        if(html.hasClass("lead-text")) {
+            Element lead = html.getElementsByClass("lead-text").first();
+            article += lead.text() + " \n";
+        }
+        //System.out.println(article);
         Elements text = html.getElementById("column1").getElementsByTag("p");
+        if(html.hasClass("lead-text"))
+            text.remove(0);
         article += text.text();
         return article.split("((?<=([.!?]\"?)[ \n](?=([^a-z])))|\n)");
     }
