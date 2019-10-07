@@ -1,5 +1,5 @@
-Dnevnik		9
-HRT		9
-24sata		10
-Jutarnji-list	6
-Novi-list	9
+Dnevnik		10
+HRT		10
+24sata		11
+Jutarnji-list	11
+Novi-list	13
